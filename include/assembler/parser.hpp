@@ -1,31 +1,32 @@
 #ifndef PARSER_HPP
 #define PARSER_HPP
 
-#include <stdio.h>
 #include <fstream>
+#include <stdio.h>
 
 using namespace std;
 
-
 class Parser
 {
-private:
-	std::fstream p;
-	std::string currentCommand;
-public:
-	Parser(std::string asm_file);
-	bool hasMoreCommands();
-	void advance();
-	enum class CommandType(A_Command, C_Command, L_Command);
-	CommandType commandType();
-	const std::string symbol(){
+  private:
+    std::ifstream p;
+    std::string currentCommand;
 
-	};
-	const std::string dest();
-	const std::string comp();
-	const std::string jump();
-
-
+  public:
+    Parser(std::string asm_file);
+    bool hasMoreCommands();
+    void advance();
+    enum class CommandType
+    {
+	A_Command,
+	C_Command,
+	L_Command
+    };
+    CommandType commandType() const;
+    std::string symbol() const;
+    std::string dest() const;
+    std::string comp() const;
+    std::string jump() const;
 };
 
 #endif
