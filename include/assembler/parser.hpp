@@ -10,11 +10,9 @@ class Parser
 {
   private:
     std::ifstream p;
-    std::string currentCommand;
+    std::string currentCommand
 
-  public:
-    Parser(const std::string asm_file);
-    bool hasMoreCommands();
+	public : Parser(const std::string asm_file);
     void advance();
     enum class CommandType
     {
