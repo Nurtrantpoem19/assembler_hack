@@ -8,31 +8,28 @@ Parser::Parser(std::string asm_file) : p(asm_file)
     p
 }
 
-bool Parser::hasMoreCommands() { return p.peek() != EOF; }
-
 void Parser::advance()
 {
     while (std::getline(p, currentCommand))
     {
 
-	std::size_t start = currentCommand.find("//");
-	if (start != std::string::npos)
+	std::size_t slash = currentCommand.find("//");
+	if (slash != std::string::npos)
 	{
-	    currentCommand = currentCommand.substr(0, start);
+	    currentCommand = currentCommand.substr(0, slash);
 	}
-	auto start = std::find_if_not(s.begin(), s.end(), [](unsigned char ch)
-				      { return std::isspace(ch); })
 
-	    // 2. Find the last non-space character (searching backward)
-	    auto end =
-		std::find_if_not(s.rbegin(), s.rend(), [](unsigned char ch)
-				 { return std::isspace(ch); })
-		    .base();
+	currentCommand.erase(
+	    std::remove_if(currentCommand.begin(), currentCommand.end(),
+			   [](unsigned char ch) { return std::isspace(ch); }),
+	    currentCommand.end());
 
-	s.erase(end, s.end());
-
-	s.erase(s.begin(), start);
+	if (!currentCommand.empty())
+	{
+	    return true;
+	}
     }
+    return false;
 };
 
 Parser::CommandType Parser::commandType() const
