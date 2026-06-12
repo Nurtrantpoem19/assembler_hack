@@ -13,14 +13,15 @@ class Parser
     std::string currentCommand;
 
   public:
-    Parser(std::string asm_file);
+    Parser(const std::string asm_file);
     bool hasMoreCommands();
     void advance();
     enum class CommandType
     {
 	A_Command,
 	C_Command,
-	L_Command
+	L_Command,
+	Not_Command
     };
     CommandType commandType() const;
     std::string symbol() const;
