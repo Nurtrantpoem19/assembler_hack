@@ -2,7 +2,6 @@
 #include <fstream>
 
 Parser::Parser(std::optional < std::string asm_file) : p(asm_file)
-
 {
     std::getline(p, currentCommand);
 }
@@ -60,7 +59,7 @@ Parser::CommandType Parser::commandType() const
     }
 }
 
-std::optional<std::string> Parser::symbol() const
+std::string Parser::symbol() const
 {
     if (currentCommand[0] == '@')
         return currentCommand.substr(1);
@@ -78,5 +77,48 @@ std::optional<std::string> Parser::dest() const
     {
         return std::nullopt;
     }
-    return currentCommand.substr(0, equal_sign);
+
+    std::string destination = currentCommand.substr(0, equal_sign);
+    return destination;
 }
+
+std::string Parser::comp() const
+{
+    std::size_t equal_sign = currentCommand.find('=');
+    std::size_t semi_colon = currentCommand.find(';');
+    // form : D aka comp, just comp. nothing else
+    if (equal_sign == std::string::npos && semi_colon == std::string::npos)
+    {
+        return currentCommand;
+    }
+    // form: D = A - 1
+    if (equal_sign != std::string::npos && semi_colon == std::string::npos)
+    {
+        return currentCommand.substr(equal_sign + 1);
+    }
+    // D;JLT
+    if (equal_sign == std::string::npos && semi_colon != std::string::npos)
+    {
+        return currentCommand.substr(0, semi_colon);
+    }
+    // D = D - 1 ; JLT
+    //
+    return currentCommand.substr(equal_sign + 1, semi_colon - equal_sign - 1);
+}
+
+std::optional<std::string> jump() const {}
+/*
+    // dest mnemonic bits: d1 = A, d2 = D, d3 = M
+   bool A = destination.find('A') != std::string::npos;
+   bool D = destination.find('D') != std::string::npos;
+   bool M = destination.find('M') != std::string::npos;
+
+   destination.clear();
+   if (A)
+       destination.push_back('A');
+   if (D)
+       destination.push_back('D');
+   if (M)
+       destination.push_back('M');
+
+*/
