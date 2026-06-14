@@ -25,7 +25,7 @@ class Parser
     CommandType commandType() const;
     std::optional<std::string> symbol() const;
     std::optional<std::string> dest() const;
-    std::optional<std::string> comp() const;
+    std::string comp() const;
     std::optional<std::string> jump() const;
 };
 
