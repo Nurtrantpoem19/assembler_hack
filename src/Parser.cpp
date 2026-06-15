@@ -1,12 +1,14 @@
-#include "Parser.hpp"
+#include "assembler/Parser.hpp"
+#include <algorithm>
 #include <fstream>
+#include <optional>
 
-Parser::Parser(std::optional < std::string asm_file) : p(asm_file)
+Parser::Parser(std::string asm_file) : p(asm_file)
 {
     std::getline(p, currentCommand);
 }
 
-void Parser::advance()
+bool Parser::advance()
 {
     while (std::getline(p, currentCommand))
     {
@@ -59,7 +61,7 @@ Parser::CommandType Parser::commandType() const
     }
 }
 
-std::string Parser::symbol() const
+std::optional<std::string> Parser::symbol() const
 {
     if (currentCommand[0] == '@')
         return currentCommand.substr(1);
@@ -106,7 +108,15 @@ std::string Parser::comp() const
     return currentCommand.substr(equal_sign + 1, semi_colon - equal_sign - 1);
 }
 
-std::optional<std::string> jump() const {}
+std::optional<std::string> Parser::jump() const
+{
+    std::size_t semi_colon = currentCommand.find(';');
+    if (semi_colon != std::string::npos)
+    {
+        return currentCommand.substr(semi_colon + 1);
+    }
+    return std::nullopt;
+}
 /*
     // dest mnemonic bits: d1 = A, d2 = D, d3 = M
    bool A = destination.find('A') != std::string::npos;
