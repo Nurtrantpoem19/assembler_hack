@@ -3,7 +3,6 @@
 
 #include <fstream>
 #include <optional>
-#include <stdio.h>
 
 using namespace std;
 
