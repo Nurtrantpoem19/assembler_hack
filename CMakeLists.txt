@@ -11,6 +11,7 @@ add_library(code_src src/code.cpp)
 
 
 target_include_directories(parser_src PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(code_src PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_subdirectory(tests)
 
