@@ -3,9 +3,14 @@
 #include <fstream>
 #include <optional>
 
-Parser::Parser(std::string asm_file) : p(asm_file)
+Parser::Parser(std::string asm_file)
 {
-    std::getline(p, currentCommand);
+    p.open(asm_file);
+    if (!p.is_open())
+    {
+        throw std::runtime_error("could not open file " + asm_file + "\n");
+    }
+    currentCommand = "";
 }
 
 bool Parser::advance()
@@ -59,6 +64,8 @@ Parser::CommandType Parser::commandType() const
     default:
         return CommandType::C_Command;
     }
+
+    return CommandType::Not_Command;
 }
 
 std::optional<std::string> Parser::symbol() const
