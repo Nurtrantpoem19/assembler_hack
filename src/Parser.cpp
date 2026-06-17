@@ -68,7 +68,7 @@ Parser::CommandType Parser::commandType() const
     return CommandType::Not_Command;
 }
 
-std::optional<std::string> Parser::symbol() const
+std::string Parser::symbol() const
 {
     if (currentCommand[0] == '@')
         return currentCommand.substr(1);
@@ -76,15 +76,15 @@ std::optional<std::string> Parser::symbol() const
     if (currentCommand.front() == '(' && currentCommand.back() == ')')
         return currentCommand.substr(1, currentCommand.size() - 2);
 
-    return std::nullopt;
+    return "";
 }
 
-std::optional<std::string> Parser::dest() const
+std::string Parser::dest() const
 {
     std::size_t equal_sign = currentCommand.find('=');
     if (equal_sign == std::string::npos)
     {
-        return std::nullopt;
+        return "";
     }
 
     std::string destination = currentCommand.substr(0, equal_sign);
@@ -115,14 +115,14 @@ std::string Parser::comp() const
     return currentCommand.substr(equal_sign + 1, semi_colon - equal_sign - 1);
 }
 
-std::optional<std::string> Parser::jump() const
+std::string Parser::jump() const
 {
     std::size_t semi_colon = currentCommand.find(';');
     if (semi_colon != std::string::npos)
     {
         return currentCommand.substr(semi_colon + 1);
     }
-    return std::nullopt;
+    return "";
 }
 /*
     // dest mnemonic bits: d1 = A, d2 = D, d3 = M

@@ -1,7 +1,6 @@
 #ifndef CODE_HPP
 #define CODE_HPP
 
-#include <stdio.h>
 #include <string>
 
 class Code
