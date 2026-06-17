@@ -1,0 +1,30 @@
+include(FetchContent)
+
+FetchContent_Declare(googletest
+	GIT_REPOSITORY https://github.com/google/googletest.git
+	GIT_TAG v1.17.0
+)
+
+FetchContent_MakeAvailable(googletest)
+
+
+
+add_executable(parser_test parser_test.cpp)
+add_executable(code_test code_test.cpp ../src/Parser.cpp)
+
+target_link_libraries(parser_test PRIVATE parser_src GTest::gtest_main)
+
+target_link_libraries(code_test PRIVATE code_src GTest::gtest_main)
+
+
+include(GoogleTest)
+
+gtest_discover_tests(parser_test)
+
+target_compile_definitions(parser_test PRIVATE TEST_FILES="${CMAKE_CURRENT_SOURCE_DIR}")
+target_compile_definitions(code_test PRIVATE TEST_FILES="${CMAKE_CURRENT_SOURCE_DIR}")
+
+
+
+
+
