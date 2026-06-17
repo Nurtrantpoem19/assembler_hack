@@ -1,5 +1,6 @@
-#include "code.hpp"
+#include "assembler/code.hpp"
 #include <string>
+#include <unordered_map>
 
 std::string Code::dest(const std::string &mnemonic)
 {
@@ -24,40 +25,40 @@ std::string Code::dest(const std::string &mnemonic)
 }
 std::string Code::jump(const std::string &mnemonic)
 {
-    std::string jump = "000";
-    if (mnemonic.find('G') != std::string::npos)
+
+    static const std::unordered_map<std::string, std::string> jumpMap = {
+        {"JGT", "001"}, {"JEQ", "010"}, {"JGE", "011"}, {"JLT", "100"},
+        {"JNE", "101"}, {"JLE", "110"}, {"JMP", "111"}};
+
+    auto it = jumpMap.find(mnemonic);
+    if (it != jumpMap.end())
     {
-        jump[2] = "1";
-        if (mnemonic.find('E') != std::string::npos)
-        {
-            jump[1] = "1";
-        }
-        return jump;
+        return it->second;
     }
-    else if (mnemonic.find('L') != std::string::npos)
-    {
-        jump[0] = "1";
-        if (mnemonic.find('E') != std::string::npos)
-        {
-            jump[1] = "j";
-        }
-        return jump;
-    }
-    else if (mnemonic[1] == "E")
-    {
-        jump[1] = "1";
-        return jump;
-    }
-    else
-    {
-        if (mnemonic[1] == "N")
-        {
-            return "101";
-        }
-        return "111";
-    }
+    return "000";
 }
-std::string Code::comp(const std::string &mnemonic);
+std::string Code::comp(const std::string &mnemonic)
+{
+    auto it = mnemonic;
+    std::size_t pos = it.find("M");
+    std::string a_bit = "0";
+    if (pos != std::string::npos)
+    {
+        it[pos] = 'A';
+
+        a_bit = "1";
+    }
+
+    std::unordered_map<std::string, std::string> compMap = {
+        {"0", "101010"},   {"1", "111111"},   {"-1", "111010"},
+        {"D", "001100"},   {"A", "110000"},   {"!D", "001101"},
+        {"!A", "110001"},  {"-D", "001111"},  {"-A", "110011"},
+        {"D+1", "011111"}, {"A+1", "110111"}, {"D-1", "001110"},
+        {"A-1", "110010"}, {"D+A", "000010"}, {"D-A", "010011"},
+        {"A-D", "000111"}, {"D&A", "000000"}, {"D|A", "010101"}};
+    std::string command = compMap.find(it)->second;
+    return a_bit + command;
+}
 
 // JGT	001	if out > 0 jump	Jump if the output is Greater Than zero.
 // JEQ	010	if out == 0 jump	Jump if the output is EQual to zero.
