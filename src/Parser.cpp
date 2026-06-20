@@ -1,7 +1,6 @@
 #include "assembler/Parser.hpp"
 #include <algorithm>
 #include <fstream>
-#include <optional>
 
 Parser::Parser(std::string asm_file)
 {
