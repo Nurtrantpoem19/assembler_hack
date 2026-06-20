@@ -8,10 +8,11 @@ enable_testing()
 
 add_library(parser_src src/Parser.cpp)
 add_library(code_src src/code.cpp)
-
+add_library(symbol_src src/symbolTable.cpp)
 
 target_include_directories(parser_src PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(code_src PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(symbol_src PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_subdirectory(tests)
 
