@@ -2,7 +2,6 @@
 #define SYMBOLTABLE_HPP
 
 #include <cstdint>
-#include <optional>
 #include <string>
 #include <unordered_map>
 
@@ -15,6 +14,6 @@ class SymbolTable
     SymbolTable();
     void addEntry(const std::string &symbol, uint16_t address);
     bool contains(const std::string &symbol) const;
-    std::optional<std::uint16_t> getAddress(const std::string &symbol) const;
+    std::uint16_t getAddress(const std::string &symbol) const;
 };
 #endif // SYMBOLTABLE_HPP
