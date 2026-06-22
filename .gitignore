@@ -2,4 +2,13 @@
 
 .clang-format
 /assembler_hack
+/tests/golden
+/tests/06
+/tests/output
 
+
+parser.vim
+parsersession.vim
+parsersession.vim!
+parsersession.vim
+parsersession.vim

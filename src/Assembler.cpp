@@ -39,10 +39,16 @@ void Assembler::assemble()
     bool firstLine = true;
     while (parser2.advance())
     {
+
+        if (parser2.commandType() == Parser::CommandType::L_Command)
+        {
+            continue;
+        }
         if (!firstLine)
         {
             output_obj << std::endl;
         }
+
         if (parser2.commandType() == Parser::CommandType::A_Command)
         {
             if (isNumber(parser2.symbol()))
@@ -62,15 +68,9 @@ void Assembler::assemble()
                 output_obj << "0" << std::bitset<15>(variable);
                 ++variable;
             }
-            continue;
         }
 
-        if (parser2.commandType() == Parser::CommandType::L_Command)
-        {
-            continue;
-        }
-
-        if (parser2.commandType() == Parser::CommandType::C_Command)
+        else if (parser2.commandType() == Parser::CommandType::C_Command)
         {
             output_obj << "111";
 
@@ -79,6 +79,7 @@ void Assembler::assemble()
 
             output_obj << Code::jump(parser2.jump());
         }
+        firstLine = false;
     }
 
     return;
