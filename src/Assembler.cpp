@@ -36,27 +36,30 @@ void Assembler::assemble()
     }
 
     int variable = 16;
+    bool firstLine = true;
     while (parser2.advance())
     {
+        if (!firstLine)
+        {
+            output_obj << std::endl;
+        }
         if (parser2.commandType() == Parser::CommandType::A_Command)
         {
             if (isNumber(parser2.symbol()))
             {
                 output_obj << "0"
-                           << std::bitset<15>(std::stoi(parser2.symbol()))
-                           << std::endl;
+                           << std::bitset<15>(std::stoi(parser2.symbol()));
             }
             else if (table.contains(parser2.symbol()))
             {
                 output_obj << "0"
                            << std::bitset<15>(
-                                  (table.getAddress(parser2.symbol())))
-                           << std::endl;
+                                  (table.getAddress(parser2.symbol())));
             }
             else
             {
                 table.addEntry(parser2.symbol(), variable);
-                output_obj << "0" << std::bitset<15>(variable) << std::endl;
+                output_obj << "0" << std::bitset<15>(variable);
                 ++variable;
             }
             continue;
@@ -75,8 +78,8 @@ void Assembler::assemble()
             output_obj << Code::dest(parser2.dest());
 
             output_obj << Code::jump(parser2.jump());
-            output_obj << std::endl;
         }
     }
+
     return;
 }
