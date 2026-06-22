@@ -94,50 +94,38 @@ TEST_F(Symbol_test, VerifyRectOutputs)
 {
 
     assembleFile("06/Rect.asm", "output/RectSymboltest.asm");
-    // 1. Define paths to both files
+
     std::filesystem::path originalPath = basepath / "06/RectL.asm";
     std::filesystem::path parsedPath = basepath / "output/RectSymboltest.asm";
 
-    // 2. Initialize both parsers
     Parser p1(originalPath.string());
     Parser p2(parsedPath.string());
 
-    // 3. Step through both files simultaneously
     while (true)
     {
         bool hasNext1 = p1.advance();
         bool hasNext2 = p2.advance();
 
-        // Assert that BOTH files finish at the exact same time.
-        // If one file has fewer instructions than the other, this fails
-        // immediately.
         ASSERT_EQ(hasNext1, hasNext2)
             << "The files have a mismatched number of instructions!";
 
-        // If we reached the end of both files successfully, break the loop
         if (!hasNext1 && !hasNext2)
         {
             break;
         }
 
-        // 4. Run cross-assertions on the commands
-        // The command types must match exactly (except L_Commands which should
-        // be stripped)
         ASSERT_EQ(p1.commandType(), p2.commandType())
             << "Command type mismatch at line count!";
 
         if (p1.commandType() == Parser::CommandType::A_Command)
         {
-            // For RectL vs RectSymboltest, check that the address matches.
-            // If RectSymboltest correctly resolved a symbol like @counter to
-            // @16, and RectL already had @16, they should now match perfectly.
             EXPECT_EQ(p1.symbol(), p2.symbol())
                 << "A-instruction address mismatch! Original: @" << p1.symbol()
                 << " | Parsed: @" << p2.symbol();
         }
         else if (p1.commandType() == Parser::CommandType::C_Command)
         {
-            // Verify all components of the C-instruction are identical
+
             EXPECT_EQ(p1.dest(), p2.dest()) << "C-Instruction Dest mismatch!";
             EXPECT_EQ(p1.comp(), p2.comp()) << "C-Instruction Comp mismatch!";
             EXPECT_EQ(p1.jump(), p2.jump()) << "C-Instruction Jump mismatch!";
